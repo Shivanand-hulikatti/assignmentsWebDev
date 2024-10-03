@@ -1,0 +1,10 @@
+[
+  {
+    "todo": "read node js",
+    "done": false
+  },
+  {
+    "todo": "do cp ",
+    "done": true
+  }
+]
