@@ -73,7 +73,7 @@ app.post('/todo',authMiddleware,async (req,res)=>{
 app.get('/todos',authMiddleware,async (req,res)=>{
     const userId = req.userId;
     
-    const todos = await TodoModel.findAll({});
+    const todos = await TodoModel.find({});
     res.json({
         todos
     })
