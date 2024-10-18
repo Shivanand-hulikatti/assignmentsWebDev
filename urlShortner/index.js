@@ -16,29 +16,36 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/url", urlRoutes);
 
 app.get("/:shortId", async (req, res) => {
-  const shortId = req.params.shortId;
-  try {
-    const entry = await URL.findOneAndUpdate(
-      { shortUrl: shortId },
-      {
-        $push: {
-          visitedHistory: {
-            timeStamp: Date.now(),
+    const shortId = req.params.shortId;
+    try {
+      const entry = await URL.findOneAndUpdate(
+        { shortUrl: shortId },
+        {
+          $push: {
+            vistedHistory: {
+              timeStamp: Date.now(),
+            },
           },
-        },
+        }
+      );
+  
+      if (!entry) {
+        return res.status(404).send("URL not found");
       }
-    );
-
-    if (!entry) {
-      return res.status(404).send("URL not found");
+  
+      if (!entry.redirectUrl) {
+        console.error("No redirectUrl found in the entry:", entry);
+        return res.status(500).send("Redirect URL not found");
+      }
+  
+      console.log("Redirecting to:", entry.redirectUrl);
+      res.redirect(entry.redirectUrl);
+    } catch (error) {
+      console.error("Error finding and updating URL:", error);
+      res.status(500).send("Internal Server Error");
     }
-    console.log(entry.redirectUrl);
-    res.redirect(entry.redirectUrl);
-  } catch (error) {
-    console.error("Error finding and updating URL:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
+  });
+  
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
