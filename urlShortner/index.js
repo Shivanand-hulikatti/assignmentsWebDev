@@ -14,24 +14,29 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/url", urlRoutes);
+
 app.get("/:shortId", async (req, res) => {
   const shortId = req.params.shortId;
-  const url = await URL.findOneAndUpdate(
-    {
-      shortUrl: shortId,
-    },
-    {
-      $push: {
-        visitedHistory: {
-          timeStamp: Date.now(),
+  try {
+    const entry = await URL.findOneAndUpdate(
+      { shortUrl: shortId },
+      {
+        $push: {
+          visitedHistory: {
+            timeStamp: Date.now(),
+          },
         },
-      },
+      }
+    );
+
+    if (!entry) {
+      return res.status(404).send("URL not found");
     }
-  );
-  if (url) {
-    res.redirect(url.redirectUrl);
-  } else {
-    res.status(404).send("URL not found");
+    console.log(entry.redirectUrl);
+    res.redirect(entry.redirectUrl);
+  } catch (error) {
+    console.error("Error finding and updating URL:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
