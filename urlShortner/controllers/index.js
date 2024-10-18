@@ -40,10 +40,10 @@ async function handleUrl(req,res){
 }
 
 async function handleAnalyticsId(req,res){
-    const id = req.params.id;
-    const url = await Url.findById(id);
+    const shortId = req.params.id;
+    const url = await Url.findOne({shortUrl:shortId});
     res.status(200).json({
-        visitedCount:url.visitedHistory.length,
+        visitedCount:url.vistedHistory.length,
         url:url.redirectUrl,
     });
 }
