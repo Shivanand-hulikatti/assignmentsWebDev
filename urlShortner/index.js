@@ -1,5 +1,6 @@
 const express = require("express");
 const connect = require("./connect");
+const path = require("path");
 const app = express();
 
 const urlRoutes = require("./routes/url");
@@ -10,8 +11,14 @@ connect(
   "mongodb+srv://shivanand:n7qhbmhrN3We30MF@testingshiva.0mtre41.mongodb.net/UrlShortner"
 );
 
+app.set("view engine", "ejs");
+app.set("views", path.resolve('views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.get('/test', (req, res) => {
+  res.render('home');
+});
 
 app.use("/url", urlRoutes);
 
@@ -45,7 +52,6 @@ app.get("/:shortId", async (req, res) => {
       res.status(500).send("Internal Server Error");
     }
   });
-  
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
