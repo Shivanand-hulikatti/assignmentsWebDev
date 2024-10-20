@@ -7,7 +7,19 @@
 </head>
 <body>
     <h1>
-        EJS is working
+        Welcome to the URL Shortner
     </h1>
+    <br>
+    <h2>
+        All the URLs are shortened here
+    </h2>
+    <br>
+    <ol>
+        <% urls.forEach(url => { %>
+            <li>
+                <%= url.shortUrl%>
+            </li>
+        <% }) %>
+    </ol>
 </body>
 </html>
